@@ -3,7 +3,6 @@ package xutil_test
 import (
 	"reflect"
 	"testing"
-	"xkit/xlog"
 
 	"github.com/coghost/xutil"
 
@@ -15,7 +14,6 @@ type ReflectSuite struct {
 }
 
 func TestReflect(t *testing.T) {
-	xlog.InitLog()
 	suite.Run(t, new(ReflectSuite))
 }
 

@@ -3,7 +3,6 @@ package xutil_test
 import (
 	"testing"
 	"time"
-	"xkit/xlog"
 
 	"github.com/coghost/xutil"
 
@@ -15,7 +14,6 @@ type MiscSuite struct {
 }
 
 func TestMisc(t *testing.T) {
-	xlog.InitLog()
 	suite.Run(t, new(MiscSuite))
 }
 

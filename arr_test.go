@@ -2,7 +2,6 @@ package xutil_test
 
 import (
 	"testing"
-	"xkit/xlog"
 
 	"github.com/coghost/xutil"
 	"github.com/stretchr/testify/suite"
@@ -13,7 +12,6 @@ type ArrSuite struct {
 }
 
 func TestArr(t *testing.T) {
-	xlog.InitLog()
 	suite.Run(t, new(ArrSuite))
 }
 

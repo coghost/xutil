@@ -3,7 +3,6 @@ package xutil_test
 import (
 	"fmt"
 	"testing"
-	"xkit/xlog"
 
 	"github.com/coghost/xutil"
 
@@ -16,7 +15,6 @@ type FileSuite struct {
 }
 
 func TestFile(t *testing.T) {
-	xlog.InitLog()
 	suite.Run(t, new(FileSuite))
 }
 

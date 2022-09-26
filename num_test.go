@@ -3,7 +3,6 @@ package xutil_test
 import (
 	"testing"
 	"time"
-	"xkit/xlog"
 
 	"github.com/coghost/xutil"
 
@@ -16,7 +15,6 @@ type NumSuite struct {
 }
 
 func TestNum(t *testing.T) {
-	xlog.InitLog()
 	suite.Run(t, new(NumSuite))
 }
 

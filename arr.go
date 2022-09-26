@@ -153,3 +153,30 @@ func Insert[T General](arr []T, index int, value T) []T {
 	arr[index] = value
 	return arr
 }
+
+// GetStrBySplit: split raw str with separator and join from offset
+//
+//	example:
+//	 raw = "a,b,c,d,e"
+//	 v, b := GetStrBySplit(raw, ",", 1)
+//	 // v = "bcde", b = true
+//
+//	 v, b := GetStrBySplit(raw, "_", 1)
+//	 // v = "a,b,c,d,e", b = false
+//
+// @return string
+// @return bool
+func GetStrBySplit(raw string, sep string, offset int) (string, bool) {
+	if strings.Contains(raw, sep) {
+		arr := strings.Split(raw, sep)
+		i := offset
+		if n := len(arr) - 1; n < offset {
+			i = n
+		}
+		if offset < 0 {
+			i = len(arr) + offset
+		}
+		return strings.Join(arr[i:], sep), true
+	}
+	return raw, false
+}

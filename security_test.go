@@ -2,7 +2,6 @@ package xutil_test
 
 import (
 	"testing"
-	"xkit/xlog"
 
 	"github.com/coghost/xutil"
 
@@ -14,7 +13,6 @@ type ChaosSuite struct {
 }
 
 func TestChaos(t *testing.T) {
-	xlog.InitLog()
 	suite.Run(t, new(ChaosSuite))
 }
 

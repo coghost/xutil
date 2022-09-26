@@ -3,7 +3,6 @@ package xutil_test
 import (
 	"errors"
 	"testing"
-	"xkit/xlog"
 
 	"github.com/coghost/xutil"
 
@@ -15,7 +14,6 @@ type ErrSuite struct {
 }
 
 func TestErr(t *testing.T) {
-	xlog.InitLog()
 	suite.Run(t, new(ErrSuite))
 }
 

@@ -2,7 +2,6 @@ package xutil_test
 
 import (
 	"testing"
-	"xkit/xlog"
 
 	"github.com/coghost/xutil"
 
@@ -15,7 +14,6 @@ type ProxySuite struct {
 }
 
 func TestProxy(t *testing.T) {
-	xlog.InitLog()
 	suite.Run(t, new(ProxySuite))
 }
 
