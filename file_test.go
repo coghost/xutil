@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/coghost/xdtm"
 	"github.com/coghost/xutil"
 
 	"github.com/gookit/goutil/fsutil"
@@ -108,7 +109,7 @@ func (s *FileSuite) TestRefineWinFileName() {
 }
 
 func (s *FileSuite) TestMustWriteFile() {
-	name := fmt.Sprintf("/tmp/filetest.%s.001.log", xutil.StrNow("YYYYMMDDHH"))
+	name := fmt.Sprintf("/tmp/filetest.%s.001.log", xdtm.Now().Layout("2006010215"))
 	type args struct {
 		name string
 		data string

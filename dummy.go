@@ -8,6 +8,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/coghost/xdtm"
 	"github.com/coghost/xpretty"
 	"github.com/gookit/goutil/dump"
 )
@@ -18,11 +19,13 @@ var (
 )
 
 // DummyLog will print a dummy log with green bg
+// Deprecated: use xpretty.DummyLog instead
 func DummyLog(msg ...interface{}) {
 	xpretty.DLog(3, Green, msg...)
 }
 
 // DummyErrorLog will print a dummy log with red bg
+// Deprecated: use xpretty.DummyErrorLog instead
 func DummyErrorLog(msg ...interface{}) {
 	xpretty.DLog(3, xpretty.Red, msg...)
 }
@@ -89,7 +92,7 @@ func Pause(args ...string) {
 	c := runtime.FuncForPC(pc).Name()
 	fmt.Printf("===> %v(%v) <===\n", c, l)
 
-	xpretty.YellowPrintf("[%s] %s%s:", StrNow(), msg, exit)
+	xpretty.YellowPrintf("[%s] %s%s:", xdtm.StrNow(), msg, exit)
 	reader := bufio.NewReader(os.Stdin)
 	_, e := reader.ReadString('\n')
 	if e != nil {

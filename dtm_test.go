@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/coghost/xutil"
+	"github.com/coghost/xdtm"
 
 	"github.com/k0kubun/pp/v3"
 	"github.com/spf13/cast"
@@ -27,62 +27,67 @@ func (s *DtmSuite) TearDownSuite() {
 }
 
 func (s *DtmSuite) Test_01_Now() {
-	now := xutil.Now()
+	now := xdtm.Now()
 
-	v := now.ToISOString()
+	v := now.ToIso8601MicroString()
 	pp.Println(v)
 
 	s.Contains(v, "T")
-	_, off := now.ToTime().Zone()
+	_, off := now.Carbon2Time().Zone()
 	exp := fmt.Sprintf("+%02d:00", off/3600)
 	s.Contains(v, exp, "timezone should match")
 }
 
 func (s *DtmSuite) Test_02_StrNow() {
-	n := xutil.StrNow()
+	n := xdtm.StrNow()
 	s.NotEmpty(n)
 	s.True(true)
 
-	n1 := xutil.StrNow("YYYY")
+	n1 := xdtm.Now().Year()
 	s.NotEmpty(n)
 
-	s.Equal(len(n1), 4)
+	s.Equal(len(cast.ToString(n1)), 4)
 }
 
 func (s *DtmSuite) Test_03_PythonTimeTime() {
 	// t and t1 should almost equal
-	t := xutil.PythonTimeTime(-3600)
-	t1 := xutil.PythonTimeTime(0) - 3600
+	t, t1 := 0.0, 0.0
+
+	go func(v *float64) {
+		*v = xdtm.PythonTimeTime(-3600)
+	}(&t)
+
+	go func(v *float64) {
+		*v = xdtm.PythonTimeTime(0) - 3600
+	}(&t1)
+
 	fmt.Printf("%#v\n", cast.ToString(t))
 	fmt.Printf("%#v\n", cast.ToString(t1))
 	s.LessOrEqual(t1-t, 1e-5)
 }
 
 func (s *DtmSuite) Test_04_UTCNow() {
-	g := xutil.UTCNow()
+	g := xdtm.UTCNow()
 	s.NotNil(g)
-	v := xutil.UTCNow().ToISOString()
+	v := xdtm.UTCNow().ToIso8601MicroString()
 	pp.Println("got", v)
 }
 
 func (s *DtmSuite) Test_05_Unix2Str() {
 	n := "1634183927"
-	got1 := xutil.Unix2Str(n)
+	got1 := xdtm.Unix2Str(cast.ToInt64(n))
 	s.Equal("2021-10-14 11:58:47", got1)
 
-	got2, err := xutil.UnixStr(n)
+	got2 := xdtm.TimestampToCarbon(cast.ToInt64(n)).ToRfc3339MicroString()
 	s.Equal("2021-10-14T11:58:47+08:00", got2)
-	s.Nil(err)
 
-	got11 := xutil.Str2Unix(got1)
-	s.NotEqual(cast.ToInt64(n), got11)
-	got12 := xutil.Str2UnixWithAutoZone(got1)
+	got12 := xdtm.Str2Unix(got1)
 	s.Equal(cast.ToInt64(n), got12)
 
-	got21 := xutil.Str2Unix(got2, time.RFC3339)
+	got21 := xdtm.Str2Unix(got2, xdtm.WithLayout(xdtm.RFC3339MicroLayout))
 	s.Equal(cast.ToInt64(n), got21)
 
-	got22 := xutil.Str2UnixWithAutoZone(got2, time.RFC3339)
+	got22 := xdtm.Str2Unix(got2, xdtm.WithLayout(xdtm.RFC3339MicroLayout))
 	s.Equal(cast.ToInt64(n), got22)
 
 	// got = xutil.Unix2Str(n, "20060102150405")
@@ -100,8 +105,8 @@ func (s *DtmSuite) Test_06_PythonTimeTimeAll() {
 	ml1 := now.UnixMilli()
 	mn1 := now.UnixNano()
 
-	g := xutil.Now()
-	g1 := g.Add(time.Duration(offset) * time.Second).ToTime()
+	g := xdtm.Now()
+	g1 := g.AddSeconds(offset).Carbon2Time()
 	m2 := g1.UnixMicro()
 	ml2 := g1.UnixMilli()
 	mn2 := g1.UnixNano()

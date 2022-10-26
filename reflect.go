@@ -5,6 +5,8 @@ import (
 	"reflect"
 	"runtime"
 	"strings"
+
+	"github.com/fatih/structs"
 )
 
 // IsZeroVal check if any type is its zero value
@@ -70,4 +72,13 @@ func Caller(skip int) (string, int) {
 	funcName = fmt.Sprintf("%s:%s", file, lst[len(lst)-1])
 
 	return funcName, l
+}
+
+func GetAllTags(structIn interface{}, tag string) (tags []string) {
+	fields := structs.Fields(structIn)
+	for _, field := range fields {
+		tag := field.Tag(tag)
+		tags = append(tags, tag)
+	}
+	return tags
 }

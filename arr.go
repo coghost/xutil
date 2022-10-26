@@ -164,6 +164,9 @@ func Insert[T General](arr []T, index int, value T) []T {
 //	 v, b := GetStrBySplit(raw, "_", 1)
 //	 // v = "a,b,c,d,e", b = false
 //
+//	 v, b := GetStrBySplit(raw, ",", -1)
+//	 // v = "e", b = false
+//
 // @return string
 // @return bool
 func GetStrBySplit(raw string, sep string, offset int) (string, bool) {
