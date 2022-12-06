@@ -9,17 +9,17 @@ require (
 	github.com/fatih/structs v1.1.0
 	github.com/golang-module/dongle v0.1.1
 	github.com/google/go-querystring v1.1.0
-	github.com/gookit/goutil v0.5.13
-	github.com/k0kubun/pp/v3 v3.1.0
+	github.com/gookit/goutil v0.5.15
+	github.com/k0kubun/pp/v3 v3.2.0
 	github.com/miku/span v0.1.342
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/shirou/gopsutil/v3 v3.22.8
 	github.com/spf13/cast v1.5.0
-	github.com/stretchr/testify v1.8.0
+	github.com/stretchr/testify v1.8.1
 	github.com/thoas/go-funk v0.9.2
 	github.com/ungerik/go-dry v0.0.0-20220205124545-c028a5f03370
-	golang.org/x/text v0.3.7
+	golang.org/x/text v0.3.8
 )
 
 require (

@@ -131,7 +131,7 @@ func ArrS2B(fields ...string) [][]byte {
 
 // ArrB2A
 //
-// convert byte array to string array
+// convert byte array to interface array
 func ArrB2A(args ...[]byte) []interface{} {
 	arr := []interface{}{}
 	for _, v := range args {
@@ -142,4 +142,26 @@ func ArrB2A(args ...[]byte) []interface{} {
 		}
 	}
 	return arr
+}
+
+// ArrB2S
+//
+// convert byte array to string
+func ArrB2S(args ...[]byte) []string {
+	arr := []string{}
+	for _, v := range args {
+		arr = append(arr, string(v))
+	}
+	return arr
+}
+
+// ArrA2B
+//
+// convert interface array to byte array
+func ArrA2B(fields ...interface{}) [][]byte {
+	bf := [][]byte{}
+	for _, f := range fields {
+		bf = append(bf, A2B(f))
+	}
+	return bf
 }

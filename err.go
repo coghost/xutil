@@ -11,13 +11,13 @@ import (
 )
 
 func PanicIfErr(args ...interface{}) {
-	paused := false
+	hasErr := false
 	for _, v := range args {
 		if err, _ := v.(error); err != nil {
-			paused = true
+			hasErr = true
 		}
 	}
-	if paused && uc.pauseInPanic {
+	if hasErr && uc.pauseInPanic {
 		Pause("press any key to quit...")
 	}
 	dry.PanicIfErr(args...)

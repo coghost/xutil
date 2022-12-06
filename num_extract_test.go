@@ -89,7 +89,7 @@ func (s *NumSuite) TestMustCharToNum() {
 func (s *NumSuite) Test_01_IntK() {
 	raw := "1.8K+"
 	raw = "5.3M+"
-	v := xutil.IntKMFromStr(raw, xutil.Chars(""), xutil.Dft(0.0))
+	v := xutil.MustIntKMFromStr(raw, xutil.Chars(""), xutil.Dft(0.0))
 	pp.Println(v)
 }
 
@@ -101,6 +101,6 @@ func (s *NumSuite) Test03_NumF64() {
 	s.True(b)
 	pp.Println(f)
 
-	i := xutil.IntKMFromStr(s1)
+	i := xutil.MustIntKMFromStr(s1)
 	s.Equal(90600, i)
 }

@@ -113,7 +113,15 @@ func MustF64KMFromStr(str string, opts ...NumOptFunc) float64 {
 	}
 }
 
-func IntKMFromStr(str string, opts ...NumOptFunc) int {
+func MustIntKMFromStr(str string, opts ...NumOptFunc) int {
 	v := MustF64KMFromStr(str, opts...)
 	return cast.ToInt(cast.ToFloat64(v))
+}
+
+func IntKMFromStr(str string, opts ...NumOptFunc) (int, bool) {
+	if v, b := F64KMFromStr(str, opts...); !b {
+		return 0, false
+	} else {
+		return cast.ToInt(cast.ToFloat64(v)), true
+	}
 }
