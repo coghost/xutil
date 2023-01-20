@@ -12,7 +12,7 @@ type WArgs struct {
 	Root      string
 	FilterDir string
 
-	NameReq     string
+	NameInclude string
 	NameExclude string
 
 	Exts []string
@@ -24,6 +24,12 @@ type WArgFunc func(o *WArgs)
 func WKv(key string, val interface{}) WArgFunc {
 	return func(o *WArgs) {
 		funk.Set(o, val, key)
+	}
+}
+
+func WithInclude(s string) WArgFunc {
+	return func(o *WArgs) {
+		o.NameInclude = s
 	}
 }
 
@@ -72,7 +78,7 @@ func walkForAllFiles(root string, opts ...WArgFunc) (dat []string) {
 
 func foundFile(path string, opts ...WArgFunc) bool {
 	opt := &WArgs{
-		NameReq:     "",
+		NameInclude: "",
 		NameExclude: "",
 		Exts:        []string{},
 		Dirs:        []string{},
@@ -93,8 +99,8 @@ func foundFile(path string, opts ...WArgFunc) bool {
 
 	findFile := funk.Contains(opt.Exts, filepath.Ext(name))
 
-	if opt.NameReq != "" {
-		findFile = findFile && strings.Contains(path, opt.NameReq)
+	if opt.NameInclude != "" {
+		findFile = findFile && strings.Contains(path, opt.NameInclude)
 	}
 
 	if opt.NameExclude != "" {

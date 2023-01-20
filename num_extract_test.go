@@ -97,8 +97,8 @@ func (s *NumSuite) Test03_NumF64() {
 	s1 := "90.6K"
 	v := xutil.MustCharToNum(s1)
 	pp.Println(v)
-	f, b := xutil.F64KMFromStr(s1)
-	s.True(b)
+	f, err := xutil.F64KMFromStr(s1)
+	s.Nil(err)
 	pp.Println(f)
 
 	i := xutil.MustIntKMFromStr(s1)

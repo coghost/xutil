@@ -81,7 +81,16 @@ func MustCharToNum(s string, opts ...NumOptFunc) (v interface{}) {
 	return v
 }
 
-func F64KMFromStr(str string, opts ...NumOptFunc) (i float64, b bool) {
+// GetCharNumOr returns parsed number or keep original
+func GetCharNumOr(s string, opts ...NumOptFunc) (v interface{}) {
+	v, e := CharToNum(s, opts...)
+	if e == nil {
+		return v
+	}
+	return s
+}
+
+func F64KMFromStr(str string, opts ...NumOptFunc) (i float64, err error) {
 	unit := 1.0
 
 	if strings.Contains(strings.ToUpper(str), "K") {
@@ -98,16 +107,16 @@ func F64KMFromStr(str string, opts ...NumOptFunc) (i float64, b bool) {
 		opt.chars += "."
 	}
 
-	v := MustCharToNum(str, Chars(opt.chars), Dft(opt.dft))
-	if v == nil {
+	v, err := CharToNum(str, Chars(opt.chars), Dft(opt.dft))
+	if err != nil {
 		return
 	}
-	return cast.ToFloat64(v) * unit, true
+	return cast.ToFloat64(v) * unit, err
 }
 
 func MustF64KMFromStr(str string, opts ...NumOptFunc) float64 {
-	if v, b := F64KMFromStr(str, opts...); !b {
-		panic(fmt.Sprintf("no number found in %s", str))
+	if v, err := F64KMFromStr(str, opts...); err != nil {
+		panic(fmt.Sprintf("no number found in %s, %v", str, err))
 	} else {
 		return v
 	}
@@ -119,7 +128,7 @@ func MustIntKMFromStr(str string, opts ...NumOptFunc) int {
 }
 
 func IntKMFromStr(str string, opts ...NumOptFunc) (int, bool) {
-	if v, b := F64KMFromStr(str, opts...); !b {
+	if v, err := F64KMFromStr(str, opts...); err != nil {
 		return 0, false
 	} else {
 		return cast.ToInt(cast.ToFloat64(v)), true

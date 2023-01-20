@@ -5,6 +5,8 @@ import (
 	"math/rand"
 	"strings"
 	"time"
+
+	"github.com/spf13/cast"
 )
 
 // RefineIndex
@@ -182,4 +184,45 @@ func GetStrBySplit(raw string, sep string, offset int) (string, bool) {
 		return strings.Join(arr[i:], sep), true
 	}
 	return raw, false
+}
+
+// MustGetStrBySplit get str or ""
+func MustGetStrBySplit(raw string, sep string, offset int) string {
+	s, b := GetStrBySplit(raw, sep, offset)
+	if b {
+		return s
+	}
+	return ""
+}
+
+// GetStrBySplitAtIndex
+// split raw to slice and then return element at index
+//
+//   - if sep not in raw, returns raw
+//   - if index < 0, reset index to len() + index
+//   - if index > total length, returns the last one
+//   - else returns element at index
+func GetStrBySplitAtIndex(raw interface{}, sep string, index int) string {
+	str := cast.ToString(raw)
+	if sep == "" || !strings.Contains(str, sep) {
+		return str
+	}
+
+	arr := strings.Split(str, sep)
+	if index > len(arr)-1 {
+		index = len(arr) - 1
+	} else if index < 0 {
+		index = len(arr) + index
+	}
+
+	return arr[index]
+}
+
+func StrToArrWithNonEmpty(raw string, sep string) (arr []string) {
+	for _, line := range strings.Split(raw, sep) {
+		if v := strings.TrimSpace(line); v != "" {
+			arr = append(arr, v)
+		}
+	}
+	return
 }

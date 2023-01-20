@@ -1,6 +1,8 @@
 package xutil
 
 import (
+	"compress/gzip"
+	"io"
 	"os"
 
 	"github.com/gookit/goutil/envutil"
@@ -62,4 +64,45 @@ func MkdirIfNotExist(dirPath string) (b bool, dirAbsPath string) {
 		return true, dirAbsPath
 	}
 	return
+}
+
+func ReadFile(filename string) (raw []byte, err error) {
+	if IsGzip(filename) {
+		raw, err = FileGetGz(filename)
+	} else {
+		raw, err = dry.FileGetBytes(filename)
+	}
+	return
+}
+
+func IsGzip(filename string) bool {
+	b, e := dry.FileGetBytes(filename)
+	if e != nil {
+		return false
+	}
+
+	if b[0] == 31 && b[1] == 139 {
+		return true
+	}
+	return false
+}
+
+func FileGetGz(filename string) ([]byte, error) {
+	fi, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer fi.Close()
+
+	fz, err := gzip.NewReader(fi)
+	if err != nil {
+		return nil, err
+	}
+	defer fz.Close()
+
+	s, err := io.ReadAll(fz)
+	if err != nil {
+		return nil, err
+	}
+	return s, nil
 }
