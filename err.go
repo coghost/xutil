@@ -2,15 +2,42 @@ package xutil
 
 import (
 	"fmt"
-	"log"
 	"reflect"
 	"time"
 
 	"github.com/avast/retry-go"
+	"github.com/rs/zerolog/log"
 	"github.com/ungerik/go-dry"
 )
 
+// LogFatalIfErr logs error with level fatal if `err!=nil`, else do nothing
+func LogFatalIfErr(err error, msg string) {
+	if err != nil {
+		log.Fatal().CallerSkipFrame(1).Err(err).Msg(msg)
+	}
+}
+
+// LogIfErr logs error with level error, and return true if err!=nil, else false
+//
+//	@return bool
+func LogIfErr(err error, msg string) bool {
+	if err != nil {
+		log.Error().CallerSkipFrame(1).Err(err).Msg(msg)
+		return true
+	}
+	return false
+}
+
+// PanicIfErr panics if has error
 func PanicIfErr(args ...interface{}) {
+	for _, v := range args {
+		if err, _ := v.(error); err != nil {
+			panic(fmt.Errorf("Panicking because of error: %s\nAt:\n%s\n", err, dry.StackTrace(3)))
+		}
+	}
+}
+
+func PanicIfErrWithPause(args ...interface{}) {
 	hasErr := false
 	for _, v := range args {
 		if err, _ := v.(error); err != nil {
@@ -20,7 +47,7 @@ func PanicIfErr(args ...interface{}) {
 	if hasErr && uc.pauseInPanic {
 		Pause("press any key to quit...")
 	}
-	dry.PanicIfErr(args...)
+	PanicIfErr(args...)
 }
 
 // ErrTry error

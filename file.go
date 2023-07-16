@@ -57,8 +57,13 @@ func MustWriteFile(name, data string) {
 	}
 }
 
-func MkdirIfNotExist(dirPath string) (b bool, dirAbsPath string) {
-	dirAbsPath = fsutil.ExpandPath(dirPath)
+func MkdirIfNotExistFromFile(filePath string) error {
+	dir, _ := fsutil.SplitPath(filePath)
+	return fsutil.Mkdir(dir, os.ModePerm)
+}
+
+func MkdirIfNotExist(dirPathName string) (b bool, dirAbsPath string) {
+	dirAbsPath = fsutil.ExpandPath(dirPathName)
 	if b := fsutil.PathExists(dirAbsPath); !b {
 		fsutil.Mkdir(dirAbsPath, os.ModePerm)
 		return true, dirAbsPath
@@ -105,4 +110,14 @@ func FileGetGz(filename string) ([]byte, error) {
 		return nil, err
 	}
 	return s, nil
+}
+
+func MustFileSetString(filename, data string) {
+	e := dry.FileSetString(filename, data)
+	PanicIfErr(e)
+}
+
+func MustFileAppendString(filename, data string) {
+	e := dry.FileAppendString(filename, data)
+	PanicIfErr(e)
 }

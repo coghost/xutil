@@ -103,9 +103,9 @@ func F64KMFromStr(str string, opts ...NumOptFunc) (i float64, err error) {
 	opt := NumOpts{chars: ".", dft: 1.0}
 	bindOpts(&opt, opts...)
 
-	if !strings.Contains(opt.chars, ".") {
-		opt.chars += "."
-	}
+	// if !strings.Contains(opt.chars, ".") {
+	// 	opt.chars += "."
+	// }
 
 	v, err := CharToNum(str, Chars(opt.chars), Dft(opt.dft))
 	if err != nil {

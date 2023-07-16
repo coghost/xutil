@@ -72,6 +72,12 @@ func RecoverAndDumpOnly() {
 	}
 }
 
+func RecoverWithCb(fn func()) {
+	if r := recover(); r != nil {
+		fn()
+	}
+}
+
 // PauseToDebug block the normal workflow, and used for debug purpose only
 //
 //	this is triggered by ctrl.debug = true

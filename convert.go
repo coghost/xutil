@@ -6,8 +6,12 @@ import (
 	"log"
 
 	"github.com/fatih/structs"
+	"github.com/goccy/go-yaml"
+	"github.com/gookit/config/v2"
+	"github.com/gookit/config/v2/yamlv3"
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/cast"
+	"github.com/ungerik/go-dry"
 )
 
 // Stringify returns a string representation
@@ -164,4 +168,26 @@ func ArrA2B(fields ...interface{}) [][]byte {
 		bf = append(bf, A2B(f))
 	}
 	return bf
+}
+
+func MustYaml2Struct(raw []byte, st interface{}) {
+	err := yaml.Unmarshal(raw, st)
+	dry.PanicIfErr(err)
+}
+
+func MustStruct2Yaml(dat interface{}) (out string) {
+	raw, err := yaml.Marshal(dat)
+	dry.PanicIfErr(err)
+	return cast.ToString(raw)
+}
+
+func Yaml2Config(raw []byte, cfs ...*config.Config) (cf *config.Config, err error) {
+	if len(cfs) != 0 {
+		cf = cfs[0]
+	} else {
+		cf = config.New("")
+	}
+	cf.AddDriver(yamlv3.Driver)
+	err = cf.LoadSources(config.Yaml, raw)
+	return cf, err
 }

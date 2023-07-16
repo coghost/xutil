@@ -9,6 +9,7 @@ import (
 	"github.com/shirou/gopsutil/v3/host"
 	"github.com/shirou/gopsutil/v3/load"
 	"github.com/shirou/gopsutil/v3/mem"
+	"github.com/shirou/gopsutil/v3/process"
 )
 
 const (
@@ -150,4 +151,24 @@ func GetLocalIpAddr() (ip, port string) {
 	lst := strings.Split(localAddr, ":")
 	ip, port = lst[0], lst[1]
 	return
+}
+
+func KillProcess(name string) error {
+	processes, err := process.Processes()
+	if err != nil {
+		return err
+	}
+	for _, p := range processes {
+		n, _ := p.Name()
+		if n == "" {
+			continue
+		}
+		if n == name {
+			e := p.Kill()
+			if e != nil {
+				return e
+			}
+		}
+	}
+	return nil
 }

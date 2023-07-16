@@ -16,6 +16,14 @@ func IfThenElse(condition bool, a interface{}, b interface{}) interface{} {
 	return b
 }
 
+// IfThenElse evaluates a condition, if true returns the first parameter otherwise the second
+func IfThenElseStr(condition bool, a, b string) string {
+	if condition {
+		return a
+	}
+	return b
+}
+
 // DefaultIfNil checks if the value is nil, if true returns the default value otherwise the original
 func DefaultIfNil(value interface{}, defaultValue interface{}) interface{} {
 	if value != nil {

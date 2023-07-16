@@ -7,6 +7,8 @@ import (
 	"strings"
 
 	"github.com/fatih/structs"
+	"github.com/rs/zerolog/log"
+	"github.com/thoas/go-funk"
 )
 
 // IsZeroVal check if any type is its zero value
@@ -81,4 +83,32 @@ func GetAllTags(structIn interface{}, tag string) (tags []string) {
 		tags = append(tags, tag)
 	}
 	return tags
+}
+
+func CallerStack() []byte {
+	var buf [4096]byte
+	n := runtime.Stack(buf[:], false)
+	return buf[:n]
+}
+
+func QuietGetKeys(obj interface{}) []string {
+	if obj == nil {
+		return []string{}
+	}
+	keys, ok := funk.Keys(obj).([]string)
+	if !ok {
+		return []string{}
+	}
+	return keys
+}
+
+func MustGetKeys(obj interface{}) []string {
+	if obj == nil {
+		return []string{}
+	}
+	keys, ok := funk.Keys(obj).([]string)
+	if !ok {
+		log.Fatal().Msg("cannot get key from object")
+	}
+	return keys
 }

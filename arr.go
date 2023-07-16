@@ -226,3 +226,7 @@ func StrToArrWithNonEmpty(raw string, sep string) (arr []string) {
 	}
 	return
 }
+
+func ConcatSlice[T General](a []T, b []T) []T {
+	return append(a, b...)
+}

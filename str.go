@@ -2,6 +2,7 @@ package xutil
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"strings"
 	"unicode/utf8"
@@ -61,4 +62,11 @@ func Utf8ToGbk(s []byte) ([]byte, error) {
 		return nil, e
 	}
 	return d, nil
+}
+
+func MustString(obj interface{}) string {
+	if v, ok := obj.(string); ok {
+		return v
+	}
+	panic(fmt.Sprintf("obj is %+v, not a valid string", obj))
 }

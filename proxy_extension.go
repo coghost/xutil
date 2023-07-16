@@ -10,8 +10,7 @@ import (
 //   - background.js
 //   - manifest.json
 //
-// line format is:
-//   "host:port:username:password:<OTHER>"
+// line format is: "host:port:username:password:<OTHER>"
 func NewChromeExtension(line, savePath string) (string, string, string) {
 	proxy_js := `var config = {
   mode: 'fixed_servers',
@@ -37,7 +36,7 @@ chrome.webRequest.onAuthRequired.addListener(callbackFn, { urls: ['<all_urls>'] 
 	manifest := `{
     "version": "1.0.0",
     "manifest_version": 2,
-    "name": "Chrome Proxy",
+    "name": "GoccProxy",
     "permissions": ["proxy", "tabs", "unlimitedStorage", "storage", "<all_urls>", "webRequest", "webRequestBlocking"],
     "background": {
         "scripts": ["background.js"]
