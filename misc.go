@@ -6,6 +6,9 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
+
+	"github.com/rs/zerolog/log"
 )
 
 var ErrEnvVarEmpty = errors.New("getenv: environment variable empty")
@@ -76,4 +79,15 @@ func GetenvBool(key string) (bool, error) {
 		return false, err
 	}
 	return v, nil
+}
+
+func Track(msg string) (string, time.Time) {
+	return msg, time.Now()
+}
+
+// Duration
+//
+//	usage: `xutil.Duration(xutil.Track("doing sth"))`
+func Duration(msg string, start time.Time) {
+	log.Info().Msgf("%v: %v\n", msg, time.Since(start))
 }

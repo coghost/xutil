@@ -14,6 +14,14 @@ import (
 	"github.com/ungerik/go-dry"
 )
 
+func MustMarshal(data interface{}) []byte {
+	b, err := json.Marshal(data)
+	if err != nil {
+		PanicIfErr(err)
+	}
+	return b
+}
+
 // Stringify returns a string representation
 func Stringify(data interface{}) (string, error) {
 	b, err := json.Marshal(data)

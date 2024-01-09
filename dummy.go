@@ -25,6 +25,7 @@ func DummyLog(msg ...interface{}) {
 }
 
 // DummyErrorLog will print a dummy log with red bg
+//
 // Deprecated: use xpretty.DummyErrorLog instead
 func DummyErrorLog(msg ...interface{}) {
 	xpretty.DLog(3, xpretty.Red, msg...)

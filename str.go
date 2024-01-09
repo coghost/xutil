@@ -2,11 +2,13 @@ package xutil
 
 import (
 	"bytes"
+	"compress/gzip"
 	"fmt"
 	"io"
 	"strings"
 	"unicode/utf8"
 
+	"github.com/rs/zerolog/log"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"golang.org/x/text/transform"
 )
@@ -69,4 +71,34 @@ func MustString(obj interface{}) string {
 		return v
 	}
 	panic(fmt.Sprintf("obj is %+v, not a valid string", obj))
+}
+
+func MustStrToGzipStr(raw string) string {
+	bt := MustStrToGzip(raw)
+	return string(bt)
+}
+
+func MustStrToGzip(raw string) []byte {
+	v, err := StrToGzip(raw)
+	if err != nil {
+		log.Fatal().Err(err).Msg("cannot convert to gzip buffer")
+	}
+
+	return v.Bytes()
+}
+
+func StrToGzip(raw string) (*bytes.Buffer, error) {
+	var buf bytes.Buffer
+
+	gz := gzip.NewWriter(&buf)
+
+	if _, err := gz.Write([]byte(raw)); err != nil {
+		return nil, err
+	}
+
+	if err := gz.Close(); err != nil {
+		return nil, err
+	}
+
+	return &buf, nil
 }

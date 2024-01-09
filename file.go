@@ -4,6 +4,7 @@ import (
 	"compress/gzip"
 	"io"
 	"os"
+	"strings"
 
 	"github.com/gookit/goutil/envutil"
 	"github.com/gookit/goutil/fsutil"
@@ -71,6 +72,12 @@ func MkdirIfNotExist(dirPathName string) (b bool, dirAbsPath string) {
 	return
 }
 
+func MustReadFile(filename string) (raw []byte) {
+	raw, err := ReadFile(filename)
+	PanicIfErr(err)
+	return raw
+}
+
 func ReadFile(filename string) (raw []byte, err error) {
 	if IsGzip(filename) {
 		raw, err = FileGetGz(filename)
@@ -78,6 +85,34 @@ func ReadFile(filename string) (raw []byte, err error) {
 		raw, err = dry.FileGetBytes(filename)
 	}
 	return
+}
+
+func MustUnGzipWithSameName(filename string) string {
+	raw, err := ReadFile(filename)
+	PanicIfErr(err)
+	dry.FileSetBytes(filename, raw)
+	return filename
+}
+
+func MustUnGzipWithoutGz(filename string) string {
+	if fsutil.Suffix(filename) != ".gz" {
+		panic(`no suffix ".gz" found, please use "MustUnGzipWithSameName" instead.`)
+	}
+
+	newName := strings.ReplaceAll(filename, ".gz", "")
+	raw, err := ReadFile(filename)
+	PanicIfErr(err)
+	dry.FileSetBytes(newName, raw)
+
+	return newName
+}
+
+func MustUnGzip(filename string) string {
+	if fsutil.Suffix(filename) == ".gz" {
+		return MustUnGzipWithoutGz(filename)
+	}
+
+	return MustUnGzipWithSameName(filename)
 }
 
 func IsGzip(filename string) bool {
