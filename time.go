@@ -3,13 +3,13 @@ package xutil
 import (
 	"time"
 
-	"github.com/gookit/goutil/mathutil"
+	"github.com/gookit/goutil/timex"
 	"github.com/spf13/cast"
 )
 
 func ElapsedSeconds(start time.Time, args ...int) float64 {
 	p := FirstOrDefaultArgs(0, args...)
-	s := mathutil.ElapsedTime(start)
+	s := timex.ElapsedNow(start)
 	f := cast.ToFloat64(s) / 1000
 
 	if p == 0 {
