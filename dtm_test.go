@@ -33,7 +33,7 @@ func (s *DtmSuite) Test_01_Now() {
 	pp.Println(v)
 
 	s.Contains(v, "T")
-	_, off := now.Carbon2Time().Zone()
+	_, off := now.ToStdTime().Zone()
 	exp := fmt.Sprintf("+%02d:00", off/3600)
 	s.Contains(v, exp, "timezone should match")
 }
@@ -106,7 +106,7 @@ func (s *DtmSuite) Test_06_PythonTimeTimeAll() {
 	mn1 := now.UnixNano()
 
 	g := xdtm.Now()
-	g1 := g.AddSeconds(offset).Carbon2Time()
+	g1 := g.AddSeconds(offset).ToStdTime()
 	m2 := g1.UnixMicro()
 	ml2 := g1.UnixMilli()
 	mn2 := g1.UnixNano()
