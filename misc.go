@@ -1,10 +1,12 @@
 package xutil
 
 import (
+	"bytes"
 	"errors"
 	"io"
 	"net/http"
 	"os"
+	"os/exec"
 	"strconv"
 	"time"
 
@@ -69,6 +71,19 @@ func GetenvInt(key string) (int, error) {
 	return v, nil
 }
 
+func GetenvIntWithDft(key string, dft int) int {
+	val, err := GetenvInt(key)
+	if err != nil {
+		return dft
+	}
+
+	if val == 0 {
+		return dft
+	}
+
+	return val
+}
+
 func GetenvBool(key string) (bool, error) {
 	s, err := GetenvStr(key)
 	if err != nil {
@@ -81,6 +96,15 @@ func GetenvBool(key string) (bool, error) {
 	return v, nil
 }
 
+func GetenvBoolWithDft(key string, dft bool) bool {
+	val, err := GetenvBool(key)
+	if err != nil {
+		return dft
+	}
+
+	return val
+}
+
 func Track(msg string) (string, time.Time) {
 	return msg, time.Now()
 }
@@ -90,4 +114,20 @@ func Track(msg string) (string, time.Time) {
 //	usage: `xutil.Duration(xutil.Track("doing sth"))`
 func Duration(msg string, start time.Time) {
 	log.Info().Msgf("%v: %v\n", msg, time.Since(start))
+}
+
+const ShellToUse = "bash"
+
+func RunCommandInBash(command string) (string, string, error) {
+	var (
+		stdout bytes.Buffer
+		stderr bytes.Buffer
+	)
+
+	cmd := exec.Command(ShellToUse, "-c", command)
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+
+	return stdout.String(), stderr.String(), err
 }

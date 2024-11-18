@@ -230,3 +230,30 @@ func StrToArrWithNonEmpty(raw string, sep string) (arr []string) {
 func ConcatSlice[T General](a []T, b []T) []T {
 	return append(a, b...)
 }
+
+func SplitSlice[T any](lines []T, step int) (got [][]T) {
+	total := len(lines)
+	n := CeilInt(len(lines), step)
+
+	for i := 0; i < n; i++ {
+		s, e := GetRangeByStep(i, step, total)
+		got = append(got, lines[s:e])
+		if e >= total {
+			break
+		}
+	}
+
+	return got
+}
+
+// GetRangeByStep return range<index*step, (index+1)*step>
+func GetRangeByStep(index, step, total int) (start, end int) {
+	start = index * step
+	end = (index + 1) * step
+
+	if end > total {
+		end = total
+	}
+
+	return start, end
+}

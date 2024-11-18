@@ -1,6 +1,7 @@
 package xutil
 
 import (
+	"bytes"
 	"compress/gzip"
 	"io"
 	"os"
@@ -78,6 +79,11 @@ func MustReadFile(filename string) (raw []byte) {
 	return raw
 }
 
+// ReadFile read content from file, support both plain file and gzip file
+//
+//	@param filename
+//	@return raw
+//	@return err
 func ReadFile(filename string) (raw []byte, err error) {
 	if IsGzip(filename) {
 		raw, err = FileGetGz(filename)
@@ -155,4 +161,37 @@ func MustFileSetString(filename, data string) {
 func MustFileAppendString(filename, data string) {
 	e := dry.FileAppendString(filename, data)
 	PanicIfErr(e)
+}
+
+func MustGzipBytesToStr(raw []byte) string {
+	bt := MustGzipBytes(raw)
+	return string(bt)
+}
+
+func MustGzipBytes(raw []byte) []byte {
+	v, err := GzipBytes(raw)
+	if err != nil {
+		panicIfErr(err)
+	}
+
+	return v.Bytes()
+}
+
+func GzipBytes(raw []byte) (*bytes.Buffer, error) {
+	var buf bytes.Buffer
+
+	gzwr, err := gzip.NewWriterLevel(&buf, gzip.BestCompression)
+	if err != nil {
+		return nil, err
+	}
+
+	if _, err := gzwr.Write([]byte(raw)); err != nil {
+		return nil, err
+	}
+
+	if err := gzwr.Close(); err != nil {
+		return nil, err
+	}
+
+	return &buf, nil
 }
